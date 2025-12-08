@@ -8,7 +8,7 @@ public static class Grammar
 
     public static readonly IReadOnlyList<Production> Productions = new[]
     {
-        //  0
+        // 0
         // Program -> StatementList EOF
         new Production(
             NonTerminal.Program,
@@ -16,7 +16,7 @@ public static class Grammar
             Symbol.T(TokenType.EndOfFile)
         ),
 
-        //  1
+        // 1
         // StatementList -> Statement StatementList
         new Production(
             NonTerminal.StatementList,
@@ -24,14 +24,14 @@ public static class Grammar
             Symbol.N(NonTerminal.StatementList)
         ),
 
-        //  2
+        // 2
         // StatementList -> ε
         new Production(
             NonTerminal.StatementList,
             Symbol.Epsilon()
         ),
 
-        //  3
+        // 3
         // Statement -> VarDecl ';'
         new Production(
             NonTerminal.Statement,
@@ -39,35 +39,35 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  4
+        // 4
         // Statement -> IfStmt
         new Production(
             NonTerminal.Statement,
             Symbol.N(NonTerminal.IfStmt)
         ),
 
-        //  5
+        // 5
         // Statement -> WhileStmt
         new Production(
             NonTerminal.Statement,
             Symbol.N(NonTerminal.WhileStmt)
         ),
 
-        //  6
+        // 6
         // Statement -> DoStmt
         new Production(
             NonTerminal.Statement,
             Symbol.N(NonTerminal.DoStmt)
         ),
 
-        //  7
+        // 7
         // Statement -> ForStmt
         new Production(
             NonTerminal.Statement,
             Symbol.N(NonTerminal.ForStmt)
         ),
 
-        //  8
+        // 8
         // Statement -> PrintStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -75,15 +75,15 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  9
-        // Statement -> AssignStmt ';'
+        // 9
+        // Statement -> Identifier StatementTail
         new Production(
             NonTerminal.Statement,
-            Symbol.N(NonTerminal.AssignStmt),
-            Symbol.T(TokenType.Semicolon)
+            Symbol.T(TokenType.Identifier),
+            Symbol.N(NonTerminal.StatementTail)
         ),
 
-        //  10
+        // 10
         // Statement -> Expr ';'
         new Production(
             NonTerminal.Statement,
@@ -91,7 +91,7 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  11
+        // 11
         // Statement -> FetchStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -99,7 +99,7 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  12
+        // 12
         // Statement -> SelectStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -107,7 +107,7 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  13
+        // 13
         // Statement -> UpdateStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -115,7 +115,7 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  14
+        // 14
         // Statement -> SaveStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -123,14 +123,14 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        //  15
+        // 15
         // Statement -> FuncDecl
         new Production(
             NonTerminal.Statement,
             Symbol.N(NonTerminal.FuncDecl)
         ),
 
-        //  16
+        // 16
         // Statement -> ReturnStmt ';'
         new Production(
             NonTerminal.Statement,
@@ -139,6 +139,24 @@ public static class Grammar
         ),
 
         // 17
+        // StatementTail -> '(' CallArgs ')' ';'   (call statement: hello();)
+        new Production(
+            NonTerminal.StatementTail,
+            Symbol.T(TokenType.LParen),
+            Symbol.N(NonTerminal.CallArgs),
+            Symbol.T(TokenType.RParen),
+            Symbol.T(TokenType.Semicolon)
+        ),
+
+        // 18
+        // StatementTail -> AssignPart ';'         (assign: x = Expr; ou x[Expr] = Expr;)
+        new Production(
+            NonTerminal.StatementTail,
+            Symbol.N(NonTerminal.AssignPart),
+            Symbol.T(TokenType.Semicolon)
+        ),
+
+        // 19
         // VarDecl -> Type Identifier VarDeclPart
         new Production(
             NonTerminal.VarDecl,
@@ -147,14 +165,14 @@ public static class Grammar
             Symbol.N(NonTerminal.VarDeclPart)
         ),
 
-        // 18
+        // 20
         // VarDeclPart -> ArrayDim
         new Production(
             NonTerminal.VarDeclPart,
             Symbol.N(NonTerminal.ArrayDim)
         ),
 
-        // 19
+        // 21
         // ArrayDim -> '[' IntLiteral ']'
         new Production(
             NonTerminal.ArrayDim,
@@ -163,45 +181,63 @@ public static class Grammar
             Symbol.T(TokenType.RBracket)
         ),
 
-        // 20
+        // 22
         // ArrayDim -> ε
         new Production(
             NonTerminal.ArrayDim,
             Symbol.Epsilon()
         ),
 
-        // 21
-        // Type -> INT | BOOL | FLOAT | CHAR | STRING | BIT | VOID
+        // 23
+        // Type -> INT
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.IntType)
         ),
+
+        // 24
+        // Type -> BOOL
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.BoolType)
         ),
+
+        // 25
+        // Type -> FLOAT
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.FloatType)
         ),
+
+        // 26
+        // Type -> CHAR
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.CharType)
         ),
+
+        // 27
+        // Type -> STRING
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.StringType)
         ),
+
+        // 28
+        // Type -> BIT
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.BitType)
         ),
+
+        // 29
+        // Type -> VOID
         new Production(
             NonTerminal.Type,
             Symbol.T(TokenType.VoidType)
         ),
 
-        // 28
+        // 30
         // IfStmt -> IF '(' Expr ')' '(' StatementList ')' ElsePart
         new Production(
             NonTerminal.IfStmt,
@@ -215,7 +251,7 @@ public static class Grammar
             Symbol.N(NonTerminal.ElsePart)
         ),
 
-        // 29
+        // 31
         // WhileStmt -> WHILE '(' Expr ')' '(' StatementList ')'
         new Production(
             NonTerminal.WhileStmt,
@@ -228,7 +264,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 30
+        // 32
         // DoStmt -> DO '(' StatementList ')' WHILE '(' Expr ')' ';'
         new Production(
             NonTerminal.DoStmt,
@@ -243,7 +279,7 @@ public static class Grammar
             Symbol.T(TokenType.Semicolon)
         ),
 
-        // 31
+        // 33
         // ForStmt -> FOR '(' AssignStmt ';' Expr ';' AssignStmt ')' '(' StatementList ')'
         new Production(
             NonTerminal.ForStmt,
@@ -260,7 +296,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 32
+        // 34
         // PrintStmt -> PRINT Expr
         new Production(
             NonTerminal.PrintStmt,
@@ -268,7 +304,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-                // 33
+        // 35
         // FetchStmt -> FETCH Identifier FROM Identifier
         new Production(
             NonTerminal.FetchStmt,
@@ -278,7 +314,7 @@ public static class Grammar
             Symbol.T(TokenType.Identifier)
         ),
 
-        // 34
+        // 36
         // SelectStmt -> SELECT ColumnList FROM Identifier Conditions
         new Production(
             NonTerminal.SelectStmt,
@@ -289,14 +325,14 @@ public static class Grammar
             Symbol.N(NonTerminal.Conditions)
         ),
 
-        // 35
+        // 37
         // ColumnList -> '*'
         new Production(
             NonTerminal.ColumnList,
             Symbol.T(TokenType.Mul)
         ),
 
-        // 36
+        // 38
         // ColumnList -> Identifier ColumnListPrime
         new Production(
             NonTerminal.ColumnList,
@@ -304,7 +340,7 @@ public static class Grammar
             Symbol.N(NonTerminal.ColumnListPrime)
         ),
 
-        // 37
+        // 39
         // ColumnListPrime -> ',' ColumnList
         new Production(
             NonTerminal.ColumnListPrime,
@@ -312,14 +348,14 @@ public static class Grammar
             Symbol.N(NonTerminal.ColumnList)
         ),
 
-        // 38
+        // 40
         // ColumnListPrime -> ε
         new Production(
             NonTerminal.ColumnListPrime,
             Symbol.Epsilon()
         ),
 
-        // 39
+        // 41
         // Conditions -> WHERE Expr
         new Production(
             NonTerminal.Conditions,
@@ -327,14 +363,14 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-        // 40
+        // 42
         // Conditions -> ε
         new Production(
             NonTerminal.Conditions,
             Symbol.Epsilon()
         ),
 
-        // 41
+        // 43
         // UpdateStmt -> UPDATE Identifier SET Identifier Assign Expr
         new Production(
             NonTerminal.UpdateStmt,
@@ -346,7 +382,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-        // 42
+        // 44
         // SaveStmt -> SAVE Identifier
         new Production(
             NonTerminal.SaveStmt,
@@ -354,7 +390,7 @@ public static class Grammar
             Symbol.T(TokenType.Identifier)
         ),
 
-        // 43
+        // 45
         // FuncDecl -> FUNC Identifier '(' ParamList ')' Assign Type '(' StatementList ')'
         new Production(
             NonTerminal.FuncDecl,
@@ -370,7 +406,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 44
+        // 46
         // ParamList -> Param ParamListPrime
         new Production(
             NonTerminal.ParamList,
@@ -378,14 +414,14 @@ public static class Grammar
             Symbol.N(NonTerminal.ParamListPrime)
         ),
 
-        // 45
+        // 47
         // ParamList -> ε
         new Production(
             NonTerminal.ParamList,
             Symbol.Epsilon()
         ),
 
-        // 46
+        // 48
         // Param -> Type Identifier
         new Production(
             NonTerminal.Param,
@@ -393,7 +429,7 @@ public static class Grammar
             Symbol.T(TokenType.Identifier)
         ),
 
-        // 47
+        // 49
         // ParamListPrime -> ',' Param ParamListPrime
         new Production(
             NonTerminal.ParamListPrime,
@@ -402,14 +438,14 @@ public static class Grammar
             Symbol.N(NonTerminal.ParamListPrime)
         ),
 
-        // 48
+        // 50
         // ParamListPrime -> ε
         new Production(
             NonTerminal.ParamListPrime,
             Symbol.Epsilon()
         ),
 
-        // 49
+        // 51
         // ReturnStmt -> RETURN Expr
         new Production(
             NonTerminal.ReturnStmt,
@@ -417,7 +453,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-        // 50
+        // 52
         // ReturnStmt -> RETURN
         new Production(
             NonTerminal.ReturnStmt,
@@ -426,7 +462,7 @@ public static class Grammar
 
         // EXPRESSÕES LÓGICAS E COMPARAÇÃO
 
-        // 51
+        // 53
         // Expr -> LogicTerm LogicExprPrime
         new Production(
             NonTerminal.Expr,
@@ -434,7 +470,7 @@ public static class Grammar
             Symbol.N(NonTerminal.LogicExprPrime)
         ),
 
-        // 52
+        // 54
         // LogicExprPrime -> OR LogicTerm LogicExprPrime
         new Production(
             NonTerminal.LogicExprPrime,
@@ -443,14 +479,14 @@ public static class Grammar
             Symbol.N(NonTerminal.LogicExprPrime)
         ),
 
-        // 53
+        // 55
         // LogicExprPrime -> ε
         new Production(
             NonTerminal.LogicExprPrime,
             Symbol.Epsilon()
         ),
 
-        // 54
+        // 56
         // LogicTerm -> RelExpr LogicTermPrime
         new Production(
             NonTerminal.LogicTerm,
@@ -458,7 +494,7 @@ public static class Grammar
             Symbol.N(NonTerminal.LogicTermPrime)
         ),
 
-        // 55
+        // 57
         // LogicTermPrime -> AND RelExpr LogicTermPrime
         new Production(
             NonTerminal.LogicTermPrime,
@@ -467,14 +503,14 @@ public static class Grammar
             Symbol.N(NonTerminal.LogicTermPrime)
         ),
 
-        // 56
+        // 58
         // LogicTermPrime -> ε
         new Production(
             NonTerminal.LogicTermPrime,
             Symbol.Epsilon()
         ),
 
-        // 57
+        // 59
         // RelExpr -> AddExpr RelPrime
         new Production(
             NonTerminal.RelExpr,
@@ -482,7 +518,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 58
+        // 60
         // RelPrime -> '<' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -491,7 +527,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 59
+        // 61
         // RelPrime -> '<=' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -500,7 +536,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 60
+        // 62
         // RelPrime -> '>' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -509,7 +545,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 61
+        // 63
         // RelPrime -> '>=' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -518,7 +554,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 62
+        // 64
         // RelPrime -> '==' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -527,7 +563,7 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 63
+        // 65
         // RelPrime -> '<>' AddExpr RelPrime
         new Production(
             NonTerminal.RelPrime,
@@ -536,14 +572,14 @@ public static class Grammar
             Symbol.N(NonTerminal.RelPrime)
         ),
 
-        // 64
+        // 66
         // RelPrime -> ε
         new Production(
             NonTerminal.RelPrime,
             Symbol.Epsilon()
         ),
 
-        // 65
+        // 67
         // AddExpr -> Term ExprPrime
         new Production(
             NonTerminal.AddExpr,
@@ -551,7 +587,7 @@ public static class Grammar
             Symbol.N(NonTerminal.ExprPrime)
         ),
 
-        // 66
+        // 68
         // ExprPrime -> '+' Term ExprPrime
         new Production(
             NonTerminal.ExprPrime,
@@ -560,7 +596,7 @@ public static class Grammar
             Symbol.N(NonTerminal.ExprPrime)
         ),
 
-        // 67
+        // 69
         // ExprPrime -> '-' Term ExprPrime
         new Production(
             NonTerminal.ExprPrime,
@@ -569,14 +605,14 @@ public static class Grammar
             Symbol.N(NonTerminal.ExprPrime)
         ),
 
-        // 68
+        // 70
         // ExprPrime -> ε
         new Production(
             NonTerminal.ExprPrime,
             Symbol.Epsilon()
         ),
 
-        // 69
+        // 71
         // Term -> Factor TermPrime
         new Production(
             NonTerminal.Term,
@@ -584,7 +620,7 @@ public static class Grammar
             Symbol.N(NonTerminal.TermPrime)
         ),
 
-        // 70
+        // 72
         // TermPrime -> '*' Factor TermPrime
         new Production(
             NonTerminal.TermPrime,
@@ -593,7 +629,7 @@ public static class Grammar
             Symbol.N(NonTerminal.TermPrime)
         ),
 
-        // 71
+        // 73
         // TermPrime -> '/' Factor TermPrime
         new Production(
             NonTerminal.TermPrime,
@@ -602,49 +638,49 @@ public static class Grammar
             Symbol.N(NonTerminal.TermPrime)
         ),
 
-        // 72
+        // 74
         // TermPrime -> ε
         new Production(
             NonTerminal.TermPrime,
             Symbol.Epsilon()
         ),
 
-        // 73
+        // 75
         // Factor -> INT_LITERAL
         new Production(
             NonTerminal.Factor,
             Symbol.T(TokenType.IntLiteral)
         ),
 
-        // 74
+        // 76
         // Factor -> BOOL_LITERAL
         new Production(
             NonTerminal.Factor,
             Symbol.T(TokenType.BoolLiteral)
         ),
 
-        // 75
+        // 77
         // Factor -> FLOAT_LITERAL
         new Production(
             NonTerminal.Factor,
             Symbol.T(TokenType.FloatLiteral)
         ),
 
-        // 76
+        // 78
         // Factor -> CHAR_LITERAL
         new Production(
             NonTerminal.Factor,
             Symbol.T(TokenType.CharLiteral)
         ),
 
-        // 77
+        // 79
         // Factor -> STRING_LITERAL
         new Production(
             NonTerminal.Factor,
             Symbol.T(TokenType.StringLiteral)
         ),
 
-                // 78
+        // 80
         // Factor -> Identifier FactorArray
         new Production(
             NonTerminal.Factor,
@@ -652,7 +688,7 @@ public static class Grammar
             Symbol.N(NonTerminal.FactorArray)
         ),
 
-        // 79
+        // 81
         // FactorArray -> '(' CallArgs ')'  (função call)
         new Production(
             NonTerminal.FactorArray,
@@ -661,7 +697,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 80
+        // 82
         // FactorArray -> '[' Expr ']'  (array access)
         new Production(
             NonTerminal.FactorArray,
@@ -670,14 +706,14 @@ public static class Grammar
             Symbol.T(TokenType.RBracket)
         ),
 
-        // 81
+        // 83
         // FactorArray -> ε  (just variable)
         new Production(
             NonTerminal.FactorArray,
             Symbol.Epsilon()
         ),
 
-        // 82
+        // 84
         // Factor -> '(' Expr ')'
         new Production(
             NonTerminal.Factor,
@@ -686,7 +722,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 83
+        // 85
         // Factor -> NOT Factor
         new Production(
             NonTerminal.Factor,
@@ -694,7 +730,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Factor)
         ),
 
-        // 84
+        // 86
         // CallArgs -> Expr CallArgsPrime
         new Production(
             NonTerminal.CallArgs,
@@ -702,14 +738,14 @@ public static class Grammar
             Symbol.N(NonTerminal.CallArgsPrime)
         ),
 
-        // 85
+        // 87
         // CallArgs -> ε
         new Production(
             NonTerminal.CallArgs,
             Symbol.Epsilon()
         ),
 
-        // 86
+        // 88
         // CallArgsPrime -> ',' Expr CallArgsPrime
         new Production(
             NonTerminal.CallArgsPrime,
@@ -718,14 +754,14 @@ public static class Grammar
             Symbol.N(NonTerminal.CallArgsPrime)
         ),
 
-        // 87
+        // 89
         // CallArgsPrime -> ε
         new Production(
             NonTerminal.CallArgsPrime,
             Symbol.Epsilon()
         ),
 
-        // 88
+        // 90
         // AssignStmt -> Identifier AssignPart
         new Production(
             NonTerminal.AssignStmt,
@@ -733,7 +769,7 @@ public static class Grammar
             Symbol.N(NonTerminal.AssignPart)
         ),
 
-        // 89
+        // 91
         // AssignPart -> '[' Expr ']' Assign Expr
         new Production(
             NonTerminal.AssignPart,
@@ -744,7 +780,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-        // 90
+        // 92
         // AssignPart -> Assign Expr
         new Production(
             NonTerminal.AssignPart,
@@ -752,7 +788,7 @@ public static class Grammar
             Symbol.N(NonTerminal.Expr)
         ),
 
-        // 91
+        // 93
         // ElsePart -> ELSEIF '(' Expr ')' '(' StatementList ')' ElsePart
         new Production(
             NonTerminal.ElsePart,
@@ -766,7 +802,7 @@ public static class Grammar
             Symbol.N(NonTerminal.ElsePart)
         ),
 
-        // 92
+        // 94
         // ElsePart -> ELSE '(' StatementList ')'
         new Production(
             NonTerminal.ElsePart,
@@ -776,7 +812,7 @@ public static class Grammar
             Symbol.T(TokenType.RParen)
         ),
 
-        // 93
+        // 95
         // ElsePart -> ε
         new Production(
             NonTerminal.ElsePart,

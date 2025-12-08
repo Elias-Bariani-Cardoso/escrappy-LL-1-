@@ -5,6 +5,7 @@ public enum NonTerminal
     Program,
     StatementList,
     Statement,
+    StatementTail,      // distinguir entre Function Call e Assign
     VarDecl,
     VarDeclPart,        // → INT x[10]; ou INT x;
     ArrayDim,           // → '[' INT ']' ou ε

@@ -66,15 +66,27 @@ UPDATE table3 SET x = 10;
 -- SAVE simples
 SAVE result;
 
--- Função sem parâmetros e retorno VOID (só declaração)
+-- Função sem parâmetros e retorno VOID
 FUNC hello() = VOID (
     PRINT msg;
 )
 
--- Função com parâmetros e retorno INT (só declaração)
+-- Função com parâmetros e retorno INT
 FUNC add(INT a, INT b) = INT (
     RETURN a + b;
 )
+
+-- Chamada de função sem parâmetros como statement
+hello();
+
+-- Chamada de função com 2 parâmetros em atribuição
+x = add(1, 2);
+
+-- Chamada de função com 2 parâmetros em expressão maior
+x = add(x, add(3, 4));
+
+-- Chamada de função dentro de expressão com array
+arr[0] = add(arr[1], 10);
 
 -- Atribuições normais
 x = 1 + 2;
