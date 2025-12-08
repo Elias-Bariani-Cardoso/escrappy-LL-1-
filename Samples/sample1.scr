@@ -1,0 +1,15 @@
+INT x;
+x = 10;
+
+IF (x > 5) (
+    PRINT x;
+) ELSEIF (x == 5) (
+    PRINT x;
+) ELSE (
+    PRINT x;
+)
+
+WHILE (x < 3) (
+    PRINT x;
+    x = x + 1;
+)
