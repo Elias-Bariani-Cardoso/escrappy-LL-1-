@@ -141,7 +141,7 @@ public sealed class Lexer
 
         string text = sb.ToString();
 
-        // tabela de keywords baseada no lexer ANTLR
+        // tabela de keywords - COMPLETA
         return text switch
         {
             "FETCH" => MakeToken(TokenType.Fetch, startLine, startColumn, text),
@@ -164,6 +164,7 @@ public sealed class Lexer
             "FOR" => MakeToken(TokenType.For, startLine, startColumn, text),
 
             "IN" => MakeToken(TokenType.In, startLine, startColumn, text),
+            "FROM" => MakeToken(TokenType.From, startLine, startColumn, text),  // ← NOVO
 
             "VOID" => MakeToken(TokenType.VoidType, startLine, startColumn, text),
             "BIT" => MakeToken(TokenType.BitType, startLine, startColumn, text),
@@ -176,6 +177,7 @@ public sealed class Lexer
             "null" => MakeToken(TokenType.VoidLiteral, startLine, startColumn, text),
             "true" or "false" => MakeToken(TokenType.BoolLiteral, startLine, startColumn, text),
 
+            "NOT" => MakeToken(TokenType.Not, startLine, startColumn, text),
             "AND" => MakeToken(TokenType.And, startLine, startColumn, text),
             "OR" => MakeToken(TokenType.Or, startLine, startColumn, text),
 

@@ -9,11 +9,12 @@ public enum TokenType
     Less, LessEqual, Greater, GreaterEqual, EqualEqual, NotEqual,
 
     // Operadores lógicos / palavras-chave
-    And, Or,
+    And, Or, Not,
     Fetch, Select, Update, Save, Set, Regex, Print, Func, Return,
     If, Else, ElseIf, Where,
     While, Do, For,
-    In,
+    In, From,
+    Arrow,
 
     // Tipos
     VoidType, BitType, BoolType, IntType, FloatType, CharType, StringType,
