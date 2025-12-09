@@ -135,9 +135,9 @@ dotnet build
 
 * **[Elias]** — Análise Léxica (Scanner)
 * **[Diogo]** — Design da Gramática e Análise Formal LL(1)
-* **[Davi tuma]** — Implementação do Algoritmo LL(1) / Pilha e Tabela
+* **[Davi tuma]** — Pilha e Tabela
 * **[Paulo Ricardo]** — Testes, Documentação e Relatórios
-* **[Marcos Silva]** - 
+* **[Marcos Silva]** - Implementação do Algoritmo LL(1)
 * 
 
 > Substitua `[Membro X]` pelos nomes reais dos colaboradores.
@@ -159,6 +159,3 @@ dotnet build
 * Mantenha o scanner e parser desacoplados — exponha a interface `TokenStream`.
 * Gere mensagens de erro amigáveis e recuperáveis quando possível (error productions ou sincronização por `FOLLOW`).
 
----
-
-> *Este README foi gerado com base na descrição fornecida pela equipe do projeto. Ajuste caminhos, comandos e nomes de arquivos conforme a implementação real.*
