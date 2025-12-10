@@ -60,32 +60,32 @@ public sealed class Lexer
         switch (c)
         {
             case ';': Advance(); return MakeToken(TokenType.Semicolon, startLine, startColumn, ";");
-            case '.': Advance(); return MakeToken(TokenType.Dot, startLine, startColumn, ".");
-            case '(': Advance(); return MakeToken(TokenType.LParen, startLine, startColumn, "(");
-            case ')': Advance(); return MakeToken(TokenType.RParen, startLine, startColumn, ")");
+            case '.': Advance(); return MakeToken(TokenType.Dot,      startLine, startColumn, ".");
+            case '(': Advance(); return MakeToken(TokenType.LParen,   startLine, startColumn, "(");
+            case ')': Advance(); return MakeToken(TokenType.RParen,   startLine, startColumn, ")");
             case '[': Advance(); return MakeToken(TokenType.LBracket, startLine, startColumn, "[");
             case ']': Advance(); return MakeToken(TokenType.RBracket, startLine, startColumn, "]");
-            case ',': Advance(); return MakeToken(TokenType.Comma, startLine, startColumn, ",");
-            case '+': Advance(); return MakeToken(TokenType.Plus, startLine, startColumn, "+");
-            case '-': Advance(); return MakeToken(TokenType.Minus, startLine, startColumn, "-");
-            case '*': Advance(); return MakeToken(TokenType.Mul, startLine, startColumn, "*");
-            case '/': Advance(); return MakeToken(TokenType.Div, startLine, startColumn, "/");
-            case '%': Advance(); return MakeToken(TokenType.Mod, startLine, startColumn, "%");
-            case '~': Advance(); return MakeToken(TokenType.Tilde, startLine, startColumn, "~");
-            case '|': Advance(); return MakeToken(TokenType.Pipe, startLine, startColumn, "|");
+            case ',': Advance(); return MakeToken(TokenType.Comma,    startLine, startColumn, ",");
+            case '+': Advance(); return MakeToken(TokenType.Plus,     startLine, startColumn, "+");
+            case '-': Advance(); return MakeToken(TokenType.Minus,    startLine, startColumn, "-");
+            case '*': Advance(); return MakeToken(TokenType.Mul,      startLine, startColumn, "*");
+            case '/': Advance(); return MakeToken(TokenType.Div,      startLine, startColumn, "/");
+            case '%': Advance(); return MakeToken(TokenType.Mod,      startLine, startColumn, "%");
+            case '~': Advance(); return MakeToken(TokenType.Tilde,    startLine, startColumn, "~");
+            case '|': Advance(); return MakeToken(TokenType.Pipe,     startLine, startColumn, "|");
             case '<':
-                if (Peek() == '=') { Advance(); Advance(); return MakeToken(TokenType.LessEqual, startLine, startColumn, "<="); }
-                if (Peek() == '>') { Advance(); Advance(); return MakeToken(TokenType.NotEqual, startLine, startColumn, "<>"); }
-                if (Peek() == '<') { Advance(); Advance(); return MakeToken(TokenType.ShiftLeft, startLine, startColumn, "<<"); }
+                if (Peek() == '=') { Advance(); Advance(); return MakeToken(TokenType.LessEqual,    startLine, startColumn, "<="); }
+                if (Peek() == '>') { Advance(); Advance(); return MakeToken(TokenType.NotEqual,     startLine, startColumn, "<>"); }
+                if (Peek() == '<') { Advance(); Advance(); return MakeToken(TokenType.ShiftLeft,    startLine, startColumn, "<<"); }
                 Advance();
                 return MakeToken(TokenType.Less, startLine, startColumn, "<");
             case '>':
                 if (Peek() == '=') { Advance(); Advance(); return MakeToken(TokenType.GreaterEqual, startLine, startColumn, ">="); }
-                if (Peek() == '>') { Advance(); Advance(); return MakeToken(TokenType.ShiftRight, startLine, startColumn, ">>"); }
+                if (Peek() == '>') { Advance(); Advance(); return MakeToken(TokenType.ShiftRight,   startLine, startColumn, ">>"); }
                 Advance();
                 return MakeToken(TokenType.Greater, startLine, startColumn, ">");
             case '=':
-                if (Peek() == '=') { Advance(); Advance(); return MakeToken(TokenType.EqualEqual, startLine, startColumn, "=="); }
+                if (Peek() == '=') { Advance(); Advance(); return MakeToken(TokenType.EqualEqual,   startLine, startColumn, "=="); }
                 Advance();
                 return MakeToken(TokenType.Assign, startLine, startColumn, "=");
             case '"':
@@ -99,12 +99,22 @@ public sealed class Lexer
             return LexNumber(startLine, startColumn);
 
         // identificador / palavra-chave
-        if (char.IsLetter(c) || c == '_')
+        // → PRIMEIRO CARACTERE: apenas letra (sem "_")
+        if (char.IsLetter(c))
             return LexIdentifierOrKeyword(startLine, startColumn);
 
-        // caractere inesperado: consome e devolve como "Identifier" genérico
+        // caractere inesperado: trate como erro léxico explícito
+        // em vez de chamar isso de Identifier
+        char invalid = c;
         Advance();
-        return MakeToken(TokenType.Identifier, startLine, startColumn, c.ToString());
+        return MakeToken(
+            TokenType.Error,
+            startLine,
+            startColumn,
+            $"Caractere inválido '{invalid}'"
+        );
+        // ou, se preferir não lançar exceção:
+        // return MakeToken(TokenType.Unknown, startLine, startColumn, invalid.ToString());
     }
 
     private void Advance()
@@ -133,7 +143,9 @@ public sealed class Lexer
     private Token LexIdentifierOrKeyword(int startLine, int startColumn)
     {
         var sb = new StringBuilder();
-        while (char.IsLetterOrDigit(Current) || Current == '_')
+
+        // CORPO DO IDENTIFICADOR: letra ou dígito, SEM "_"
+        while (char.IsLetterOrDigit(Current))
         {
             sb.Append(Current);
             Advance();
@@ -141,47 +153,47 @@ public sealed class Lexer
 
         string text = sb.ToString();
 
-        // tabela de keywords - COMPLETA
         return text switch
         {
-            "FETCH" => MakeToken(TokenType.Fetch, startLine, startColumn, text),
-            "SELECT" => MakeToken(TokenType.Select, startLine, startColumn, text),
-            "UPDATE" => MakeToken(TokenType.Update, startLine, startColumn, text),
-            "SAVE" => MakeToken(TokenType.Save, startLine, startColumn, text),
-            "SET" => MakeToken(TokenType.Set, startLine, startColumn, text),
-            "REGEX" => MakeToken(TokenType.Regex, startLine, startColumn, text),
-            "PRINT" => MakeToken(TokenType.Print, startLine, startColumn, text),
-            "FUNC" => MakeToken(TokenType.Func, startLine, startColumn, text),
-            "RETURN" => MakeToken(TokenType.Return, startLine, startColumn, text),
+            "FETCH"  => MakeToken(TokenType.Fetch,    startLine, startColumn, text),
+            "SELECT" => MakeToken(TokenType.Select,   startLine, startColumn, text),
+            "UPDATE" => MakeToken(TokenType.Update,   startLine, startColumn, text),
+            "SAVE"   => MakeToken(TokenType.Save,     startLine, startColumn, text),
+            "SET"    => MakeToken(TokenType.Set,      startLine, startColumn, text),
+            "REGEX"  => MakeToken(TokenType.Regex,    startLine, startColumn, text),
+            "PRINT"  => MakeToken(TokenType.Print,    startLine, startColumn, text),
+            "FUNC"   => MakeToken(TokenType.Func,     startLine, startColumn, text),
+            "RETURN" => MakeToken(TokenType.Return,   startLine, startColumn, text),
 
-            "IF" => MakeToken(TokenType.If, startLine, startColumn, text),
-            "ELSE" => MakeToken(TokenType.Else, startLine, startColumn, text),
-            "ELSEIF" => MakeToken(TokenType.ElseIf, startLine, startColumn, text),
-            "WHERE" => MakeToken(TokenType.Where, startLine, startColumn, text),
+            "IF"     => MakeToken(TokenType.If,       startLine, startColumn, text),
+            "ELSE"   => MakeToken(TokenType.Else,     startLine, startColumn, text),
+            "ELSEIF" => MakeToken(TokenType.ElseIf,   startLine, startColumn, text),
+            "WHERE"  => MakeToken(TokenType.Where,    startLine, startColumn, text),
 
-            "WHILE" => MakeToken(TokenType.While, startLine, startColumn, text),
-            "DO" => MakeToken(TokenType.Do, startLine, startColumn, text),
-            "FOR" => MakeToken(TokenType.For, startLine, startColumn, text),
+            "WHILE"  => MakeToken(TokenType.While,    startLine, startColumn, text),
+            "DO"     => MakeToken(TokenType.Do,       startLine, startColumn, text),
+            "FOR"    => MakeToken(TokenType.For,      startLine, startColumn, text),
 
-            "IN" => MakeToken(TokenType.In, startLine, startColumn, text),
-            "FROM" => MakeToken(TokenType.From, startLine, startColumn, text),  // ← NOVO
+            "IN"     => MakeToken(TokenType.In,       startLine, startColumn, text),
+            "FROM"   => MakeToken(TokenType.From,     startLine, startColumn, text),
 
-            "VOID" => MakeToken(TokenType.VoidType, startLine, startColumn, text),
-            "BIT" => MakeToken(TokenType.BitType, startLine, startColumn, text),
-            "BOOL" => MakeToken(TokenType.BoolType, startLine, startColumn, text),
-            "INT" => MakeToken(TokenType.IntType, startLine, startColumn, text),
-            "FLOAT" => MakeToken(TokenType.FloatType, startLine, startColumn, text),
-            "CHAR" => MakeToken(TokenType.CharType, startLine, startColumn, text),
-            "STRING" => MakeToken(TokenType.StringType, startLine, startColumn, text),
+            "VOID"   => MakeToken(TokenType.VoidType, startLine, startColumn, text),
+            "BIT"    => MakeToken(TokenType.BitType,  startLine, startColumn, text),
+            "BOOL"   => MakeToken(TokenType.BoolType, startLine, startColumn, text),
+            "INT"    => MakeToken(TokenType.IntType,  startLine, startColumn, text),
+            "FLOAT"  => MakeToken(TokenType.FloatType,startLine, startColumn, text),
+            "CHAR"   => MakeToken(TokenType.CharType, startLine, startColumn, text),
+            "STRING" => MakeToken(TokenType.StringType,startLine,startColumn, text),
 
-            "null" => MakeToken(TokenType.VoidLiteral, startLine, startColumn, text),
-            "true" or "false" => MakeToken(TokenType.BoolLiteral, startLine, startColumn, text),
+            "null"   => MakeToken(TokenType.VoidLiteral, startLine, startColumn, text),
+            "true" or "false"
+                     => MakeToken(TokenType.BoolLiteral, startLine, startColumn, text),
 
-            "NOT" => MakeToken(TokenType.Not, startLine, startColumn, text),
-            "AND" => MakeToken(TokenType.And, startLine, startColumn, text),
-            "OR" => MakeToken(TokenType.Or, startLine, startColumn, text),
+            "NOT"    => MakeToken(TokenType.Not,      startLine, startColumn, text),
+            "AND"    => MakeToken(TokenType.And,      startLine, startColumn, text),
+            "OR"     => MakeToken(TokenType.Or,       startLine, startColumn, text),
 
-            _ => MakeToken(TokenType.Identifier, startLine, startColumn, text)
+            _        => MakeToken(TokenType.Identifier, startLine, startColumn, text)
         };
     }
 
@@ -217,7 +229,7 @@ public sealed class Lexer
         string text = sb.ToString();
         return isFloat
             ? MakeToken(TokenType.FloatLiteral, startLine, startColumn, text)
-            : MakeToken(TokenType.IntLiteral, startLine, startColumn, text);
+            : MakeToken(TokenType.IntLiteral,   startLine, startColumn, text);
     }
 
     private Token LexString(int startLine, int startColumn)

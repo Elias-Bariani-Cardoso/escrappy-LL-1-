@@ -3,7 +3,14 @@ INT x;
 x = 10;
 
 FUNC hello() = VOID (
-    PRINT "Hello World";
+    WHILE(x > 1)(
+        x = x - 1;
+        PRINT "Hello World";
+    )
+)
+
+IF (x == 1)(
+    PRINT "X é igual a 1";
 )
 
 hello();
@@ -12,8 +19,8 @@ FUNC add(INT a, INT b) = INT (
     RETURN a + b;
 )
 
-add(1, 2);
+add(1, x);
 
-IF (x > 5) (
+IF (x > _) (
     PRINT x;
 )

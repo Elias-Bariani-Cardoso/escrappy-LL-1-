@@ -21,7 +21,7 @@ public enum TokenType
 
     // Literais / identificadores
     VoidLiteral, BoolLiteral, IntLiteral, FloatLiteral, CharLiteral, StringLiteral,
-    Identifier,
+    Identifier, Error,
 
     // Especiais
     EndOfFile,
