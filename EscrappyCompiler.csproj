@@ -5,19 +5,34 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- IMPORTANTE: DESATIVAR INCLUSÃO AUTOMÁTICA DE .CS -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
- <ItemGroup>
+  <!-- Agora só compila o que estiver listado abaixo -->
+  <ItemGroup>
+
+    <!-- LEXER -->
     <Compile Include="Lexing\*.cs" />
+
+    <!-- PARSER -->
     <Compile Include="Parsing\*.cs" />
 
-    <!-- MANTER O GERADOR LL(1) -->
-    <Compile Include="CompilerTools\Grammar\*.cs" />
-
-    <!-- AST opcional -->
+    <!-- AST (opcional) -->
     <Compile Include="AST\*.cs" />
 
+    <!-- GERADOR LL(1) -->
+    <Compile Include="CompilerTools\Grammar\*.cs" />
+
+    <!-- Program -->
     <Compile Include="Program.cs" />
-</ItemGroup>
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Docs\" />
+    <Folder Include="Samples\" />
+  </ItemGroup>
 
 </Project>
