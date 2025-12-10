@@ -7,9 +7,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Docs\" />
-    <Folder Include="Samples\" />
-  </ItemGroup>
+ <ItemGroup>
+    <Compile Include="Lexing\*.cs" />
+    <Compile Include="Parsing\*.cs" />
+
+    <!-- MANTER O GERADOR LL(1) -->
+    <Compile Include="CompilerTools\Grammar\*.cs" />
+
+    <!-- AST opcional -->
+    <Compile Include="AST\*.cs" />
+
+    <Compile Include="Program.cs" />
+</ItemGroup>
 
 </Project>
