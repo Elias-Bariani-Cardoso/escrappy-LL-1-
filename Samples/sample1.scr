@@ -1,99 +1,19 @@
--- Declaração de variáveis de vários tipos
 INT x;
-FLOAT y;
-BOOL flag;
-CHAR c;
-STRING msg;
-BIT b;
-
--- Array simples
-INT arr[5];
 
 x = 10;
-y = 3.14;
-flag = true;
-c = 'A';
-msg = "hello";
 
-arr[0] = 1;
-arr[1] = 2;
-arr[2] = 3;
-arr[3] = 4;
-arr[4] = 5;
-
--- IF / ELSEIF / ELSE com expressões lógicas
-IF (x > 5 AND flag) (
-    PRINT x;
-) ELSEIF (x == 5) (
-    PRINT x;
-) ELSE (
-    PRINT x;
-)
-
--- WHILE com expressão lógica
-WHILE (x > 0 AND flag) (
-    PRINT x;
-    x = x - 1;
-)
-
--- DO / WHILE com OR e NOT
-DO (
-    PRINT x;
-    x = x + 1;
-) WHILE (x < 3 OR NOT flag);
-
--- FOR com expressão condicional
-FOR (x = 0; x < 5 AND flag; x = x + 1) (
-    PRINT x;
-)
-
--- Acesso a array em expressões
-x = arr[0] + arr[1];
-PRINT x;
-
--- FETCH simples
-FETCH x FROM source;
-
--- SELECT com lista de colunas e WHERE
-SELECT a, b, c FROM table1 WHERE x > 2 AND flag;
-
--- SELECT com *
-SELECT * FROM table2;
-
--- UPDATE simples
-UPDATE table3 SET x = 10;
-
--- SAVE simples
-SAVE result;
-
--- Função sem parâmetros e retorno VOID
 FUNC hello() = VOID (
-    PRINT msg;
+    PRINT "Hello World";
 )
 
--- Função com parâmetros e retorno INT
+hello();
+
 FUNC add(INT a, INT b) = INT (
     RETURN a + b;
 )
 
--- Chamada de função sem parâmetros como statement
-hello();
+add(1, 2);
 
--- Chamada de função com 2 parâmetros em atribuição
-x = add(1, 2);
-
--- Chamada de função com 2 parâmetros em expressão maior
-x = add(x, add(3, 4));
-
--- Chamada de função dentro de expressão com array
-arr[0] = add(arr[1], 10);
-
--- Atribuições normais
-x = 1 + 2;
-y = y + 1.0;
-flag = NOT false;
-
--- Teste extra de booleanos
-IF (NOT false) (
-    PRINT flag;
+IF (x > 5) (
+    PRINT x;
 )
